@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BudgetCoach</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ========== THEME PRESETS (identical to before) ========== */
+    :root { --transition-speed: 0.3s; }
+    body.theme-modern {
+      --primary: #6C63FF; --primary-soft: rgba(108,99,255,0.15);
+      --text-color: #1e1e2f; --text-muted: #4a4a6a;
+      --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+      --glass-bg: rgba(255, 255, 255, 0.25); --glass-border: rgba(255, 255, 255, 0.4);
+      --glass-light-bg: rgba(255, 255, 255, 0.15); --glass-light-border: rgba(255, 255, 255, 0.3);
+      --input-bg: rgba(255, 255, 255, 0.25); --input-border: rgba(255, 255, 255, 0.35);
+      --sidebar-bg: rgba(255, 255, 255, 0.4); --scrollbar-thumb: rgba(108, 99, 255, 0.5);
+      --button-bg: rgba(255, 255, 255, 0.25); --button-hover: rgba(255, 255, 255, 0.4);
+      --message-user: rgba(108,99,255,0.15); --message-assistant: rgba(255,255,255,0.3);
+    }
+    body.theme-ocean {
+      --primary: #0ea5e9; --primary-soft: rgba(14,165,233,0.15);
+      --text-color: #0c4a6e; --text-muted: #164e63;
+      --bg-gradient: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+      --glass-bg: rgba(255, 255, 255, 0.3); --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-light-bg: rgba(255, 255, 255, 0.2); --glass-light-border: rgba(255, 255, 255, 0.4);
+      --input-bg: rgba(255, 255, 255, 0.3); --input-border: rgba(255, 255, 255, 0.5);
+      --sidebar-bg: rgba(255, 255, 255, 0.5); --scrollbar-thumb: rgba(14,165,233,0.5);
+      --button-bg: rgba(255, 255, 255, 0.3); --button-hover: rgba(255, 255, 255, 0.5);
+      --message-user: rgba(14,165,233,0.15); --message-assistant: rgba(255,255,255,0.4);
+    }
+    body.theme-sunset {
+      --primary: #f97316; --primary-soft: rgba(249,115,22,0.15);
+      --text-color: #431407; --text-muted: #7c2d12;
+      --bg-gradient: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
+      --glass-bg: rgba(255, 255, 255, 0.35); --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-light-bg: rgba(255, 255, 255, 0.2); --glass-light-border: rgba(255, 255, 255, 0.4);
+      --input-bg: rgba(255, 255, 255, 0.3); --input-border: rgba(255, 255, 255, 0.5);
+      --sidebar-bg: rgba(255, 255, 255, 0.55); --scrollbar-thumb: rgba(249,115,22,0.5);
+      --button-bg: rgba(255, 255, 255, 0.3); --button-hover: rgba(255, 255, 255, 0.5);
+      --message-user: rgba(249,115,22,0.15); --message-assistant: rgba(255,255,255,0.4);
+    }
+    body.theme-forest {
+      --primary: #10b981; --primary-soft: rgba(16,185,129,0.15);
+      --text-color: #064e3b; --text-muted: #065f46;
+      --bg-gradient: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+      --glass-bg: rgba(255, 255, 255, 0.3); --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-light-bg: rgba(255, 255, 255, 0.2); --glass-light-border: rgba(255, 255, 255, 0.4);
+      --input-bg: rgba(255, 255, 255, 0.3); --input-border: rgba(255, 255, 255, 0.5);
+      --sidebar-bg: rgba(255, 255, 255, 0.5); --scrollbar-thumb: rgba(16,185,129,0.5);
+      --button-bg: rgba(255, 255, 255, 0.3); --button-hover: rgba(255, 255, 255, 0.5);
+      --message-user: rgba(16,185,129,0.15); --message-assistant: rgba(255,255,255,0.4);
+    }
+    body.theme-neon {
+      --primary: #d946ef; --primary-soft: rgba(217,70,239,0.15);
+      --text-color: #4a044e; --text-muted: #701a75;
+      --bg-gradient: linear-gradient(135deg, #f5d0fe 0%, #e879f9 100%);
+      --glass-bg: rgba(255, 255, 255, 0.25); --glass-border: rgba(255, 255, 255, 0.4);
+      --glass-light-bg: rgba(255, 255, 255, 0.15); --glass-light-border: rgba(255, 255, 255, 0.3);
+      --input-bg: rgba(255, 255, 255, 0.25); --input-border: rgba(255, 255, 255, 0.35);
+      --sidebar-bg: rgba(255, 255, 255, 0.4); --scrollbar-thumb: rgba(217,70,239,0.5);
+      --button-bg: rgba(255, 255, 255, 0.25); --button-hover: rgba(255, 255, 255, 0.4);
+      --message-user: rgba(217,70,239,0.15); --message-assistant: rgba(255,255,255,0.3);
+    }
+    body.theme-pastel {
+      --primary: #f472b6; --primary-soft: rgba(244,114,182,0.15);
+      --text-color: #831843; --text-muted: #9d174d;
+      --bg-gradient: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+      --glass-bg: rgba(255, 255, 255, 0.35); --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-light-bg: rgba(255, 255, 255, 0.2); --glass-light-border: rgba(255, 255, 255, 0.4);
+      --input-bg: rgba(255, 255, 255, 0.3); --input-border: rgba(255, 255, 255, 0.5);
+      --sidebar-bg: rgba(255, 255, 255, 0.55); --scrollbar-thumb: rgba(244,114,182,0.5);
+      --button-bg: rgba(255, 255, 255, 0.3); --button-hover: rgba(255, 255, 255, 0.5);
+      --message-user: rgba(244,114,182,0.15); --message-assistant: rgba(255,255,255,0.4);
+    }
+    body.dark {
+      --text-color: #e0e0e0; --text-muted: #a0a0b0;
+      --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      --glass-bg: rgba(20, 20, 35, 0.7); --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-light-bg: rgba(255, 255, 255, 0.08); --glass-light-border: rgba(255, 255, 255, 0.15);
+      --input-bg: rgba(255, 255, 255, 0.1); --input-border: rgba(255, 255, 255, 0.2);
+      --sidebar-bg: rgba(10, 10, 20, 0.8); --scrollbar-thumb: rgba(187, 134, 252, 0.4);
+      --button-bg: rgba(255, 255, 255, 0.1); --button-hover: rgba(255, 255, 255, 0.2);
+      --message-user: rgba(108,99,255,0.15); --message-assistant: rgba(255,255,255,0.05);
+    }
+    body.theme-classic {
+      --primary: #4A90E2; --primary-soft: rgba(74,144,226,0.15);
+      --text-color: #1e293b; --text-muted: #475569;
+      --bg-gradient: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+      --glass-bg: rgba(255, 255, 255, 0.35); --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-light-bg: rgba(255, 255, 255, 0.2); --glass-light-border: rgba(255, 255, 255, 0.4);
+      --input-bg: rgba(255, 255, 255, 0.3); --input-border: rgba(255, 255, 255, 0.4);
+      --sidebar-bg: rgba(255, 255, 255, 0.6); --scrollbar-thumb: rgba(74, 144, 226, 0.5);
+      --button-bg: rgba(255, 255, 255, 0.35); --button-hover: rgba(255, 255, 255, 0.55);
+      --message-user: rgba(74,144,226,0.15); --message-assistant: rgba(255,255,255,0.5);
+    }
+    body.theme-retro {
+      --primary: #E63946; --primary-soft: rgba(230,57,70,0.15);
+      --text-color: #2e2e2e; --text-muted: #5a5a5a;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --glass-bg: rgba(255, 245, 235, 0.35); --glass-border: rgba(255, 200, 150, 0.5);
+      --glass-light-bg: rgba(255, 245, 235, 0.2); --glass-light-border: rgba(255, 200, 150, 0.4);
+      --input-bg: rgba(255, 245, 235, 0.3); --input-border: rgba(255, 200, 150, 0.45);
+      --sidebar-bg: rgba(253, 231, 201, 0.7); --scrollbar-thumb: rgba(230, 57, 70, 0.5);
+      --button-bg: rgba(255, 245, 235, 0.4); --button-hover: rgba(255, 245, 235, 0.6);
+      --message-user: rgba(230,57,70,0.15); --message-assistant: rgba(255,245,235,0.5);
+    }
+
+    /* ========== BASE STYLES ========== */
+    * { box-sizing: border-box; }
+    body {
+      transition: background var(--transition-speed), color var(--transition-speed);
+      background: var(--bg-gradient); color: var(--text-color);
+      font-family: 'Inter', sans-serif; margin: 0;
+    }
+    #app { display: flex; height: 100vh; overflow: hidden; }
+    .glass {
+      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 20px;
+    }
+    .glass-light {
+      background: var(--glass-light-bg); backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-light-border); border-radius: 16px;
+    }
+    .squircle-input {
+      border-radius: 30px; background: var(--input-bg); backdrop-filter: blur(10px);
+      border: 1px solid var(--input-border); padding: 12px 20px; transition: all 0.2s;
+      color: var(--text-color);
+    }
+    .squircle-input:focus { outline: none; border-radius: 18px; box-shadow: 0 0 12px var(--primary); }
+    .message-bubble {
+      border-radius: 24px; padding: 0.8rem 1rem; max-width: 85%;
+      word-wrap: break-word; transition: all 0.2s;
+    }
+    .message-user { background: var(--message-user); margin-left: auto; }
+    .message-assistant { background: var(--message-assistant); margin-right: auto; }
+    .prompt-chip {
+      background: var(--button-bg); border: 1px solid var(--glass-light-border);
+      border-radius: 20px; padding: 6px 12px; cursor: pointer; font-size: 0.8rem;
+      white-space: nowrap; color: var(--text-color); transition: all 0.2s;
+    }
+    .prompt-chip:hover { background: var(--button-hover); }
+    .calc-btn {
+      background: var(--button-bg); border: 1px solid var(--glass-light-border);
+      border-radius: 50%; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; user-select: none; color: var(--text-color);
+    }
+    .calc-btn:hover { background: var(--button-hover); }
+    .calc-display {
+      background: var(--input-bg); border-radius: 20px; padding: 8px;
+      text-align: right; font-size: 1.2rem; color: var(--text-color);
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+    /* Sidebar */
+    .sidebar-panel {
+      display: flex; flex-direction: column; width: 320px; height: 100%;
+      margin: 8px; flex-shrink: 0; overflow: hidden;
+    }
+    .sidebar-content { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .sidebar-input-area { padding: 0.75rem; border-top: 1px solid var(--glass-border); }
+    .input-collapsed {
+      width: 48px; height: 48px; border-radius: 50%; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.4s ease;
+    }
+
+    /* Main chat */
+    .main-area {
+      flex: 1; display: flex; flex-direction: column; margin: 8px;
+      min-width: 0; position: relative;
+    }
+    .chat-container { flex: 1; overflow-y: auto; padding: 1rem; }
+
+    /* Centered input container (chips + input bar) – will be hidden when collapsed */
+    .centered-input-container {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%); width: 90%; max-width: 700px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .centered-input-container.hidden-main {
+      opacity: 0; visibility: hidden; pointer-events: none;
+    }
+    /* Chips container */
+    .chips-container {
+      width: 100%; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    }
+    /* Input bar */
+    .input-bar {
+      width: 100%; transition: all 0.3s ease;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .input-bar .send-btn {
+      background: var(--button-bg); border: 1px solid var(--glass-light-border);
+      border-radius: 50%; width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-color); flex-shrink: 0;
+    }
+    .input-bar .text-input { flex: 1; }
+
+    /* Floating action circle – bottom right corner */
+    .floating-circle {
+      position: absolute; bottom: 20px; right: 20px;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--glass-bg); backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-color);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 20;
+    }
+    .floating-circle.hidden-float {
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform: scale(0.8);
+    }
+
+    /* Loading animation */
+    .emoji-loader {
+      font-size: 1.5rem; animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }
+    }
+
+    /* Mobile FAB */
+    .fab {
+      position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px;
+      border-radius: 50%; background: var(--primary); color: #fff;
+      display: none; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 100;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-panel {
+        position: fixed; left: -100%; top: 0; bottom: 0; width: 300px;
+        z-index: 50; transition: left 0.3s ease; margin: 0; border-radius: 0;
+      }
+      .sidebar-panel.open { left: 0; }
+      .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 40; }
+      .overlay.open { display: block; }
+      .fab { display: flex; }
+      .main-area { margin: 0; border-radius: 0; }
+      .centered-input-container { bottom: 16px; width: 95%; }
+      .floating-circle { bottom: 16px; right: 16px; }
+    }
+  </style>
+</head>
+<body class="theme-modern">
+  <div id="overlay" class="overlay"></div>
+  <div id="app">
+    <!-- ===== SIDEBAR (identical to previous versions) ===== -->
+    <aside id="sidebar" class="sidebar-panel glass">
+      <div class="sidebar-content">
+        <div class="flex items-center justify-between">
+          <h1 class="text-xl font-bold">💰 BudgetCoach</h1>
+          <button id="closeSidebarBtn" class="md:hidden glass-light p-2 rounded-full"><i class="fa-solid fa-times"></i></button>
+        </div>
+
+        <!-- Profile controls (ONCLICK) -->
+        <div class="flex items-center space-x-1">
+          <select id="profileSelect" class="flex-1 glass-light p-2 bg-transparent rounded-lg text-sm"></select>
+          <button type="button" class="glass-light p-2 hover:bg-white/20 rounded-full" title="Rename" onclick="window.renameCurrentProfile()"><i class="fa-solid fa-pen-to-square text-sm"></i></button>
+          <button type="button" class="glass-light p-2 hover:bg-red-500/30 rounded-full" title="Delete" onclick="window.deleteCurrentProfile()"><i class="fa-solid fa-trash text-sm"></i></button>
+          <button type="button" class="glass-light p-2 hover:bg-white/20 rounded-full" onclick="window.createNewProfile()"><i class="fa-solid fa-plus text-sm"></i></button>
+        </div>
+
+        <!-- Income -->
+        <div>
+          <label class="text-sm">Monthly Income (₹)</label>
+          <input id="incomeInput" type="number" class="w-full glass-light p-2 rounded-xl bg-transparent" step="1000">
+          <button id="updateIncomeBtn" type="button" class="mt-1 w-full glass-light hover:bg-white/20 p-2 rounded-xl text-sm">💾 Update Income</button>
+        </div>
+
+        <hr class="border-white/20">
+
+        <!-- Expenses -->
+        <details class="glass-light rounded-xl p-2">
+          <summary class="cursor-pointer font-medium text-sm">📋 Expenses</summary>
+          <div id="expensesList" class="mt-2 space-y-1 max-h-32 overflow-y-auto text-sm"></div>
+          <form id="addExpenseForm" class="mt-2 space-y-1">
+            <input id="expDesc" placeholder="Description" class="w-full bg-white/10 p-1 rounded-xl placeholder-gray-400 text-sm">
+            <div class="flex gap-2">
+              <input id="expAmount" type="number" placeholder="Amount" class="w-1/2 bg-white/10 p-1 rounded-xl placeholder-gray-400 text-sm">
+              <select id="expFreq" class="w-1/2 bg-white/10 p-1 rounded-xl text-sm">
+                <option value="daily">daily</option><option value="weekly">weekly</option><option value="monthly">monthly</option>
+                <option value="quarterly">quarterly</option><option value="yearly">yearly</option><option value="never">never</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-white/20 p-1 rounded-xl text-sm">Add</button>
+          </form>
+        </details>
+
+        <!-- Goals -->
+        <details class="glass-light rounded-xl p-2">
+          <summary class="cursor-pointer font-medium text-sm">🎯 Goals</summary>
+          <div id="goalsList" class="mt-2 space-y-1 text-sm"></div>
+          <form id="addGoalForm" class="mt-2 space-y-1">
+            <input id="goalName" placeholder="Goal name" class="w-full bg-white/10 p-1 rounded-xl placeholder-gray-400 text-sm">
+            <input id="goalTarget" type="number" placeholder="Target (₹)" class="w-full bg-white/10 p-1 rounded-xl placeholder-gray-400 text-sm">
+            <button type="submit" class="w-full bg-white/20 p-1 rounded-xl text-sm">Add</button>
+          </form>
+        </details>
+
+        <!-- Calculator -->
+        <details class="glass-light rounded-xl p-2">
+          <summary class="cursor-pointer font-medium text-sm">🔢 Calculator</summary>
+          <div class="mt-2">
+            <div id="calcDisplay" class="calc-display mb-2 text-sm">0</div>
+            <div class="grid grid-cols-4 gap-2">
+              <button class="calc-btn text-sm" onclick="calcInput('7')">7</button>
+              <button class="calc-btn text-sm" onclick="calcInput('8')">8</button>
+              <button class="calc-btn text-sm" onclick="calcInput('9')">9</button>
+              <button class="calc-btn text-sm" onclick="calcInput('/')">/</button>
+              <button class="calc-btn text-sm" onclick="calcInput('4')">4</button>
+              <button class="calc-btn text-sm" onclick="calcInput('5')">5</button>
+              <button class="calc-btn text-sm" onclick="calcInput('6')">6</button>
+              <button class="calc-btn text-sm" onclick="calcInput('*')">*</button>
+              <button class="calc-btn text-sm" onclick="calcInput('1')">1</button>
+              <button class="calc-btn text-sm" onclick="calcInput('2')">2</button>
+              <button class="calc-btn text-sm" onclick="calcInput('3')">3</button>
+              <button class="calc-btn text-sm" onclick="calcInput('-')">-</button>
+              <button class="calc-btn text-sm" onclick="calcInput('0')">0</button>
+              <button class="calc-btn text-sm" onclick="calcInput('.')">.</button>
+              <button class="calc-btn text-sm" onclick="calcClear()">C</button>
+              <button class="calc-btn text-sm" onclick="calcInput('+')">+</button>
+              <button class="calc-btn col-span-4 rounded-xl text-sm" onclick="calcEvaluate()">=</button>
+            </div>
+          </div>
+        </details>
+
+        <hr class="border-white/20">
+
+        <!-- Theme & Customization -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <select id="themeSelect" class="bg-white/10 p-1 rounded-xl text-sm">
+              <option value="modern">Modern</option>
+              <option value="ocean">Ocean</option>
+              <option value="sunset">Sunset</option>
+              <option value="forest">Forest</option>
+              <option value="neon">Neon</option>
+              <option value="pastel">Pastel</option>
+              <option value="classic">Classic</option>
+              <option value="retro">Retro</option>
+            </select>
+            <button id="darkModeToggle" type="button" class="glass-light p-2 rounded-full w-8 h-8 flex items-center justify-center">
+              <i class="fa-solid fa-sun text-sm"></i>
+            </button>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-xs">🎨 Accent</label>
+            <input type="color" id="accentPicker" value="#6C63FF" class="w-8 h-8 rounded-full border-0 bg-transparent cursor-pointer">
+          </div>
+        </div>
+
+        <button id="historyBtn" type="button" class="w-full glass-light hover:bg-white/20 p-2 rounded-xl text-sm">📜 History</button>
+      </div>
+
+      <!-- SIDEBAR INPUT (manual toggle) -->
+      <!-- <div class="sidebar-input-area">
+        <div id="inputWrapper" class="relative flex items-center hidden">
+          <input id="chatInput" type="text" class="squircle-input w-full bg-transparent placeholder-gray-400" placeholder="Ask about your finances...">
+          <button id="sendBtn" type="button" class="absolute right-2 top-1/2 -translate-y-1/2 glass-light p-2 rounded-full hover:bg-white/20">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+        <div id="inputCircle" class="input-collapsed glass-light" title="Open input">
+          <i class="fa-solid fa-message"></i>
+        </div>
+      </div> -->
+    </aside>
+
+    <!-- ===== MAIN CHAT AREA ===== -->
+    <main class="main-area glass">
+      <div class="flex items-center justify-between p-2 md:hidden">
+        <button id="menuBtn" class="glass-light p-2 rounded-full"><i class="fa-solid fa-bars"></i></button>
+      </div>
+      <div id="chatContainer" class="chat-container space-y-3"></div>
+
+      <!-- CENTERED INPUT (will be hidden when collapsed) -->
+      <div id="centeredInputContainer" class="centered-input-container">
+        <div class="chips-container">
+          <span class="prompt-chip" data-prompt="How much time will it take to achieve my goal?">🎯 Goal timeline</span>
+          <span class="prompt-chip" data-prompt="How can I increase my savings?">📈 Increase savings</span>
+          <span class="prompt-chip" data-prompt="Where am I wasting my money?">🕳️ Money leaks</span>
+          <span class="prompt-chip" data-prompt="What is my current savings rate?">💵 Savings rate</span>
+          <span class="prompt-chip" data-prompt="Give me a budget based on my expenses.">📊 Budget plan</span>
+        </div>
+
+        <div id="inputBar" class="input-bar glass">
+          <input id="chatInputMain" type="text" class="text-input squircle-input bg-transparent placeholder-gray-400" placeholder="Ask about your finances...">
+          <button id="sendBtnMain" class="send-btn">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- FLOATING CIRCLE (shown when input collapsed) -->
+      <div id="floatingCircle" class="floating-circle hidden-float">
+        <i class="fa-solid fa-comment"></i>
+      </div>
+    </main>
+
+    <!-- Mobile FAB -->
+    <button id="fab" class="fab"><i class="fa-solid fa-comment"></i></button>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+      <div class="glass p-6 w-96 max-h-[80vh] overflow-y-auto">
+        <h2 class="text-xl mb-3">Chat History</h2>
+        <div id="historyContent" class="space-y-2"></div>
+        <button id="closeHistory" type="button" class="mt-3 w-full glass-light p-2 rounded-xl">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- GLOBAL STATE ----------
+    let currentUser = null;
+    let users = [];
+    let theme = 'modern';
+    let darkMode = false;
+    const API = '';
+    const EMOJIS = ['💰','💸','📊','🧮','💡','🔍','📅','📌','🏦','💳','🧾','💎','✨','🚀','📉'];
+
+    // ---------- CALCULATOR ----------
+    let calcExpr = '';
+    window.calcInput = (v) => { calcExpr += v; document.getElementById('calcDisplay').innerText = calcExpr; };
+    window.calcClear = () => { calcExpr = ''; document.getElementById('calcDisplay').innerText = '0'; };
+    window.calcEvaluate = () => {
+      try { const r = eval(calcExpr); document.getElementById('calcDisplay').innerText = r; calcExpr = r.toString(); }
+      catch { document.getElementById('calcDisplay').innerText = 'Error'; calcExpr = ''; }
+    };
+
+    // ---------- PROFILE ACTIONS ----------
+    window.createNewProfile = async () => {
+      const name = prompt('Enter profile name:');
+      if (!name) return;
+      try {
+        const res = await fetch(`${API}/api/users`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({name, monthly_income:0})
+        });
+        if (!res.ok) throw new Error('Create failed');
+        await window._loadUsers();
+      } catch(e) { alert('Error creating profile.'); console.error(e); }
+    };
+    window.renameCurrentProfile = async () => {
+      if (!currentUser) { alert('No profile selected.'); return; }
+      const newName = prompt('Enter new name:', currentUser.name);
+      if (!newName || newName === currentUser.name) return;
+      try {
+        const res = await fetch(`${API}/api/users/${currentUser.id}`, {
+          method: 'PUT', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({name: newName})
+        });
+        if (!res.ok) throw new Error('Rename failed');
+        currentUser.name = newName;
+        const userInList = users.find(u => u.id == currentUser.id);
+        if (userInList) userInList.name = newName;
+        window._renderProfiles();
+      } catch(e) { alert('Error renaming profile.'); console.error(e); }
+    };
+    window.deleteCurrentProfile = async () => {
+      if (!currentUser) { alert('No profile selected.'); return; }
+      if (!confirm(`Delete profile "${currentUser.name}" and all its data?`)) return;
+      try {
+        const res = await fetch(`${API}/api/users/${currentUser.id}`, {method:'DELETE'});
+        if (!res.ok) throw new Error('Delete failed');
+        users = users.filter(u => u.id != currentUser.id);
+        currentUser = null;
+        window._renderProfiles();
+      } catch(e) { alert('Error deleting profile.'); console.error(e); }
+    };
+
+    // ---------- DOM READY ----------
+    document.addEventListener('DOMContentLoaded', () => {
+      // DOM elements
+      const profileSelect = document.getElementById('profileSelect');
+      const incomeInput = document.getElementById('incomeInput');
+      const updateIncomeBtn = document.getElementById('updateIncomeBtn');
+      const expensesList = document.getElementById('expensesList');
+      const addExpenseForm = document.getElementById('addExpenseForm');
+      const goalsList = document.getElementById('goalsList');
+      const addGoalForm = document.getElementById('addGoalForm');
+      const themeSelect = document.getElementById('themeSelect');
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const accentPicker = document.getElementById('accentPicker');
+      const historyBtn = document.getElementById('historyBtn');
+      const historyModal = document.getElementById('historyModal');
+      const historyContent = document.getElementById('historyContent');
+      const closeHistoryBtn = document.getElementById('closeHistory');
+      const chatContainer = document.getElementById('chatContainer');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const menuBtn = document.getElementById('menuBtn');
+      const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+      const fab = document.getElementById('fab');
+
+      // Input elements
+      const centeredContainer = document.getElementById('centeredInputContainer');
+      const mainInput = document.getElementById('chatInputMain');
+      const mainSendBtn = document.getElementById('sendBtnMain');
+      const floatingCircle = document.getElementById('floatingCircle');
+
+      // ---------- COLLAPSIBLE LOGIC ----------
+      function collapseInput() {
+        centeredContainer.classList.add('hidden-main');
+        floatingCircle.classList.remove('hidden-float');
+      }
+      function expandInput() {
+        centeredContainer.classList.remove('hidden-main');
+        floatingCircle.classList.add('hidden-float');
+        setTimeout(() => mainInput.focus(), 50);
+      }
+      chatContainer.addEventListener('scroll', collapseInput);
+      floatingCircle.addEventListener('click', expandInput);
+
+      // ---------- MOBILE SIDEBAR ----------
+      function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
+      function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+      menuBtn.addEventListener('click', openSidebar);
+      closeSidebarBtn.addEventListener('click', closeSidebar);
+      overlay.addEventListener('click', closeSidebar);
+      fab.addEventListener('click', openSidebar);
+
+      // ---------- THEME & ACCENT ----------
+      function applyThemeAndMode() {
+        document.body.classList.remove('theme-modern','theme-ocean','theme-sunset','theme-forest','theme-neon','theme-pastel','theme-classic','theme-retro');
+        document.body.classList.add(`theme-${theme}`);
+        if (darkMode) {
+          document.body.classList.add('dark');
+          darkModeToggle.innerHTML = '<i class="fa-solid fa-moon text-sm"></i>';
+        } else {
+          document.body.classList.remove('dark');
+          darkModeToggle.innerHTML = '<i class="fa-solid fa-sun text-sm"></i>';
+        }
+        const accent = accentPicker.value;
+        document.documentElement.style.setProperty('--primary', accent);
+        document.documentElement.style.setProperty('--primary-soft', `${accent}26`);
+      }
+      themeSelect.addEventListener('change', (e) => { theme = e.target.value; applyThemeAndMode(); });
+      darkModeToggle.addEventListener('click', () => { darkMode = !darkMode; applyThemeAndMode(); });
+      accentPicker.addEventListener('input', applyThemeAndMode);
+      applyThemeAndMode();
+
+      // ---------- USER DATA ----------
+      window._loadUsers = async () => {
+        try {
+          const res = await fetch(`${API}/api/users`);
+          if (!res.ok) throw new Error('Failed to fetch users');
+          users = await res.json();
+          _renderProfiles();
+        } catch(e) { alert('Could not load users. Is the backend running?'); }
+      };
+      window._renderProfiles = () => {
+        profileSelect.innerHTML = '';
+        users.forEach(u => {
+          const opt = document.createElement('option');
+          opt.value = u.id;
+          opt.textContent = u.name;
+          profileSelect.appendChild(opt);
+        });
+        if (currentUser && users.find(u => u.id == currentUser.id)) {
+          profileSelect.value = currentUser.id;
+        } else if (users.length > 0) {
+          setCurrentUser(users[0].id);
+        } else {
+          currentUser = null;
+          chatContainer.innerHTML = '';
+          expensesList.innerHTML = '';
+          goalsList.innerHTML = '';
+          incomeInput.value = 0;
+        }
+      };
+
+      async function setCurrentUser(userId) {
+        const user = users.find(u => u.id == userId);
+        if (!user) return;
+        currentUser = user;
+        incomeInput.value = currentUser.monthly_income;
+        await loadExpenses();
+        await loadGoals();
+        await loadChatHistory();
+      }
+      profileSelect.addEventListener('change', (e) => setCurrentUser(Number(e.target.value)));
+
+      updateIncomeBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+        const income = parseFloat(incomeInput.value) || 0;
+        await fetch(`${API}/api/users/${currentUser.id}`, {
+          method: 'PUT', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({monthly_income: income})
+        });
+        currentUser.monthly_income = income;
+      });
+
+      // Expenses
+      async function loadExpenses() {
+        if (!currentUser) return;
+        const res = await fetch(`${API}/api/expenses/${currentUser.id}`);
+        const data = await res.json();
+        expensesList.innerHTML = data.map(e => `
+          <div class="flex justify-between items-center text-sm">
+            <span>${e.description} (₹${e.amount}) ${e.frequency==='never'?'one-time':e.frequency}</span>
+            <button onclick="window.deleteExpense(${e.id})" class="text-red-300">🗑️</button>
+          </div>
+        `).join('');
+      }
+      window.deleteExpense = async (id) => { await fetch(`${API}/api/expenses/${id}`, {method:'DELETE'}); loadExpenses(); loadGoals(); };
+      addExpenseForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+        const desc = document.getElementById('expDesc').value;
+        const amount = parseFloat(document.getElementById('expAmount').value) || 0;
+        const freq = document.getElementById('expFreq').value;
+        await fetch(`${API}/api/expenses`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({user_id:currentUser.id, description:desc, amount, frequency:freq})
+        });
+        addExpenseForm.reset();
+        await loadExpenses();
+        await loadGoals();
+      });
+
+      // Goals
+      async function loadGoals() {
+        if (!currentUser) return;
+        const goalsRes = await fetch(`${API}/api/goals/${currentUser.id}`);
+        const goals = await goalsRes.json();
+        const expRes = await fetch(`${API}/api/expenses/${currentUser.id}`);
+        const expenses = await expRes.json();
+        let totalMonthlyExpense = 0;
+        expenses.forEach(e => {
+          if (e.frequency === 'daily') totalMonthlyExpense += e.amount * 30;
+          else if (e.frequency === 'weekly') totalMonthlyExpense += e.amount * 4;
+          else if (e.frequency === 'monthly') totalMonthlyExpense += e.amount;
+          else if (e.frequency === 'quarterly') totalMonthlyExpense += e.amount / 3;
+          else if (e.frequency === 'yearly') totalMonthlyExpense += e.amount / 12;
+        });
+        const surplus = currentUser.monthly_income - totalMonthlyExpense;
+        goalsList.innerHTML = goals.map(g => {
+          const months = surplus > 0 ? Math.ceil(g.target_amount / surplus) : Infinity;
+          const timelineText = months === Infinity ? '∞' : `${months} month${months>1?'s':''}`;
+          return `
+            <div class="text-sm">
+              <div class="flex justify-between"><span>${g.name}</span><span class="text-muted">₹${g.current_saved}/₹${g.target_amount}</span></div>
+              <div class="w-full bg-white/20 rounded-full h-2 mt-1"><div class="bg-blue-400 h-2 rounded-full" style="width:${(g.current_saved/g.target_amount)*100}%"></div></div>
+              <div class="text-xs text-muted mt-1">⏳ ${timelineText} (surplus ₹${surplus.toFixed(0)}/mo)</div>
+            </div>
+          `;
+        }).join('');
+      }
+      addGoalForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+        const name = document.getElementById('goalName').value;
+        const target = parseFloat(document.getElementById('goalTarget').value) || 0;
+        await fetch(`${API}/api/goals`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({user_id:currentUser.id, name, target_amount: target})
+        });
+        addGoalForm.reset();
+        await loadGoals();
+      });
+
+      // ---------- CHAT WITH EMOJI LOADER ----------
+      function addMessage(role, content) {
+        const div = document.createElement('div');
+        div.className = `message-bubble ${role==='user' ? 'message-user' : 'message-assistant'}`;
+        div.innerHTML = content.replace(/\n/g, '<br>');
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function createLoader() {
+        const loaderDiv = document.createElement('div');
+        loaderDiv.className = 'message-bubble message-assistant emoji-loader';
+        loaderDiv.id = 'loader';
+        chatContainer.appendChild(loaderDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        window._loaderInterval = setInterval(() => {
+          const randomEmoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+          loaderDiv.textContent = randomEmoji;
+        }, 200);
+        return loaderDiv;
+      }
+
+      function removeLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) {
+          clearInterval(window._loaderInterval);
+          loader.remove();
+        }
+      }
+
+      async function sendMessage(messageText = null) {
+        const prompt = messageText || mainInput.value.trim();
+        if (!prompt || !currentUser) return;
+        addMessage('user', prompt);
+        if (!messageText) mainInput.value = '';
+
+        createLoader();
+
+        let imageB64 = null;
+        try {
+          const res = await fetch(`${API}/api/chat`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ user_id: currentUser.id, prompt, image: imageB64 })
+          });
+          const data = await res.json();
+          removeLoader();
+          addMessage('assistant', data.answer);
+        } catch (err) {
+          removeLoader();
+          addMessage('assistant', '⚠️ Error connecting to AI. Please try again.');
+        }
+      }
+
+      mainSendBtn.addEventListener('click', () => sendMessage());
+      mainInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+      // Quick prompt chips
+      document.querySelectorAll('.prompt-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          mainInput.value = chip.dataset.prompt;
+          sendMessage();
+        });
+      });
+
+      async function loadChatHistory() {
+        chatContainer.innerHTML = '';
+        if (!currentUser) return;
+        const res = await fetch(`${API}/api/history/${currentUser.id}`);
+        const msgs = await res.json();
+        msgs.forEach(m => addMessage(m.role, m.content));
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        expandInput();
+      }
+
+      historyBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+        historyModal.classList.remove('hidden');
+        const res = await fetch(`${API}/api/history/${currentUser.id}`);
+        const msgs = await res.json();
+        historyContent.innerHTML = msgs.map(m => `<div class="glass-light p-2 rounded-xl"><strong>${m.role}:</strong> ${m.content}</div>`).join('');
+      });
+      closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
+
+      // Initial load
+      window._loadUsers();
+    });
+  </script>
+</body>
+</html>
